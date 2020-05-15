@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+import Token from './pages/Token';
 
 export default function Routes(){
     return(
@@ -12,6 +13,7 @@ export default function Routes(){
                 <Route path="/" exact component={Login} />
                 <Route path="/register" component={Register} />
                 <Route path="/home" component={Home} />
+                <Route path="/confirmRegister" component={Token} />
             </Switch>
         </BrowserRouter>
     );

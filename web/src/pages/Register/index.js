@@ -13,10 +13,10 @@ export default function Register(){
                 </section>
                 
                 <form autoComplete="off">
-                    <input placeholder="Nome" />
-                    <input placeholder="E-mail" type="email" />
-                    <input placeholder="Senha" type="password" />
-                    <input placeholder="Confirmar Senha" type="password" />
+                    <input placeholder="Nome" required/>
+                    <input placeholder="E-mail" type="email" required/>
+                    <input placeholder="Senha" type="password" required/>
+                    <input placeholder="Confirmar Senha" type="password" required/>
                     <button className="button" type="submit">Cadastrar</button>
                     <Link className="back-link" to="/">
                         <FiArrowLeft size={16} color="#000000"/>

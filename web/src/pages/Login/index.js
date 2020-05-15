@@ -12,9 +12,9 @@ export default function Login(){
                 <div className="login-header">
                     <img src={logoImg} alt="SysOrder" />
                     <form className="login-form">
-                        <input placeholder="E-mail" type="email"/>
+                        <input placeholder="E-mail" type="email" required/>
                         <div className="login-icons"><FiMail size={16}/></div>
-                        <input placeholder="Senha" type="password"/>
+                        <input placeholder="Senha" type="password" required/>
                         <div className="login-icons"><FiLock size={16}/></div>
                         <button className="button">Entrar</button>
                     </form>
