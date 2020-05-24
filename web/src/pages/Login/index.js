@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiMail, FiLock, FiLogIn } from 'react-icons/fi'
+import { Modal} from 'react-bootstrap';
+import { FiMail, FiLock, FiLogIn, FiKey } from 'react-icons/fi'
 import logoImg from "../../assets/logo.png";
+import RecoveryModal from '../RecoveryPass';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 
 export default function Login(){
+    const [showRec, setShowRec] = useState(false);
+
+    const handleOpenRec = () => setShowRec(true);
+    const handleCloseRec = () => setShowRec(false);
+
     return(
         <div className="login-container">
             <div className="login-content">
@@ -20,19 +28,26 @@ export default function Login(){
                     </form>
                     <div className="login-icons"><FiLogIn size={18} color="#ffffff"/></div>
                     <div>
-                        <Link className="back-link" to="/">
+                        <Link className="back-link" onClick={handleOpenRec}>
+                            <FiKey size={16} color="#000000" style={{marginRight: 5}}/>
                             <u>Esqueci minha senha !</u>
                         </Link>
                     </div>
                 </div>
                 <div className="login-bottom">
                     <div>
-                        <span>Não possui uma conta ?</span>
+                        <span>Não possui uma conta ?&nbsp;</span>
                         <Link className="back-link" to="/register">
-                            <p>&nbsp;Cadastrar</p>
+                            Cadastrar
                         </Link>
                     </div>
                 </div>
+                <Modal show={showRec} 
+                onHide={handleCloseRec}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered>
+                    <RecoveryModal/>
+                </Modal>
             </div>
         </div>
     );

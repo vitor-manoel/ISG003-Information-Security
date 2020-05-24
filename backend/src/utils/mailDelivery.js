@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
-const u = "projeto.sysorder.si@gmail.com";
-const p = "sysorder";
+const u = "";
+const p = "";
 
 module.exports = function mailDelivery() {
     const transporter = nodemailer.createTransport({
