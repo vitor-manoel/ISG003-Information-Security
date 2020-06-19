@@ -1,3 +1,4 @@
+const conn = require('../database/conn');
 const mailDelivery = require("../utils/mailDelivery");
 const tokenID = require("../utils/tokenID");
 const encrypt = require("../utils/encrypt");
@@ -22,7 +23,7 @@ module.exports = {
                 "\nCaso não tenha sido você quem fez o cadastro, favor desconsiderar este e-mail." +
                 "\n\nSegue abaixo o token para autenticação do seu cadastro :" +
                 "\n\n" + token +
-                "\n\nO token irá expirar em 1 (uma) hora caso não seja validado !")
+                "\n\nO token irá expirar em 1 (uma) hora ou após 3 (três) tentativas incorretas !")
         };
                 
         mailDelivery().sendMail(mailConfig, function(error, info){
@@ -32,5 +33,8 @@ module.exports = {
                 console.log('Email enviado: ' + info.response);
             }
         });
+
+
+        return response.json({email});
     },
 }

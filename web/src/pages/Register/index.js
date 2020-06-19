@@ -10,24 +10,87 @@ export default function Register(){
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [rSenha, setRSenha] = useState('');
 
     const history = useHistory();
 
-    async function handleRegister(e){
-        e.preventDefault();
+    async function handleRegister(){
 
         const data = {
             nome,
             email,
-            senha
+            senha,
         };
-
-        await api.post('register', data).then(resp => {
-            alert("Pré cadastro realizado com sucesso !" +
-                "\nConfirme sua conta no e-mail : " + resp.data.email);
-            history.push('/confirmRegister');
-        }).catch(e => {
+        
+        const hexMail = await api.post('register', data).catch(e => {
             alert(e.response.data.message);
+        });
+
+        if(hexMail){
+            await api.post('sendToken', data).then(e => {
+                alert("Pré cadastro realizado com sucesso !" +
+                    "\nToken de confirmação enviado para o e-mail : " + data.email);
+            }).catch(e => {
+                alert(e.response.data.message);
+            });
+            history.push(`/confirmRegister/${hexMail.data.hexMail}`);
+        }
+    }
+
+    function checkForm(e){
+        e.preventDefault();
+
+        if(senha !== rSenha){
+            alert('A confirmação da senha está incorreta !');
+        }else if(!senha.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)){
+            alert("A senha não atende os requisitos mínimos de segurança !" +
+                 "\nPelo menos 1 letra, 1 número e no mínimo 8 caracteres.");
+        }else{
+            handleRegister();
+        }
+    }
+
+    function checkPass(e){
+        setSenha(e.target.value);
+
+        const inputPassElement = document.getElementById('password');
+
+        inputPassElement.addEventListener('keyup', function(ev) {
+            const input = ev.target;
+            const value = ev.target.value;
+
+            if(value === ''){
+                input.classList.remove('--has-error');
+                input.classList.remove('--has-checked');
+            }else if(!value.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)){
+                input.classList.remove('--has-checked');
+                input.classList.add('--has-error');
+            }else {
+                input.classList.remove('--has-error');
+                input.classList.add('--has-checked');
+            }
+        });
+    }
+
+    function checkRPass(e){
+        setRSenha(e.target.value);
+
+        const inputRePassElement = document.getElementById('repeat-password');
+
+        inputRePassElement.addEventListener('keyup', function(ev) {
+            const input = ev.target;
+            const value = ev.target.value;
+
+            if(value === ''){
+                input.classList.remove('--has-error');
+                input.classList.remove('--has-checked');
+            }else if(!value.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/) || value !== senha){
+                input.classList.remove('--has-checked');
+                input.classList.add('--has-error');
+            }else {
+                input.classList.remove('--has-error');
+                input.classList.add('--has-checked');
+            }
         });
     }
 
@@ -40,20 +103,27 @@ export default function Register(){
                     <p>Faça seu cadastro para acessar a plataforma.</p>
                 </section>
                 
-                <form onSubmit={handleRegister} autoComplete="off">
+                <form onSubmit={checkForm} autoComplete="off">
                     <input placeholder="Nome" 
-                    value={nome}
-                    onChange={e => setNome(e.target.value)}
-                    required/>
+                        value={nome}
+                        onChange={e => setNome(e.target.value)}
+                        required/>
                     <input placeholder="E-mail" type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    required/>
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        required/>
                     <input placeholder="Senha" type="password"
-                    value={senha}
-                    onChange={e => setSenha(e.target.value)}
-                    required/>
-                    <input placeholder="Confirmar Senha" type="password" required/>
+                        className="password-input-check"
+                        id="password"
+                        value={senha}
+                        onChange={e => checkPass(e)}
+                        required/>
+                    <input placeholder="Confirmar Senha" type="password"
+                        className="password-input-check"
+                        id="repeat-password"
+                        value={rSenha}
+                        onChange={e => checkRPass(e)}
+                        required/>
                     <button className="button" type="submit">Cadastrar</button>
                     <Link className="back-link" to="/">
                         <FiArrowLeft size={16} color="#000000"/>
