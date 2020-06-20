@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Modal} from 'react-bootstrap';
 import { FiMail, FiLock, FiLogIn, FiKey } from 'react-icons/fi'
 import logoImg from "../../assets/logo.png";
@@ -7,22 +7,55 @@ import RecoveryModal from '../RecoveryPass';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
+import api from '../../services/api';
 
 export default function Login(){
+
+    const history = useHistory();
+
     const [showRec, setShowRec] = useState(false);
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
 
     const handleOpenRec = () => setShowRec(true);
     const handleCloseRec = () => setShowRec(false);
+
+    async function handleLogin(e){
+        e.preventDefault();
+
+        const data = {
+            email: email,
+            senha: senha
+        }
+
+        await api.post('sessions', data).then(e => {
+            localStorage.setItem('userMail', email);
+            history.push('/home');
+        }).catch(e => {
+            alert(e.response.data.error);
+            if(e.response.data.changeURL){
+                history.push(`/confirmRegister/${e.response.data.user.email}`);
+            }
+        });
+    }
 
     return(
         <div className="login-container">
             <div className="login-content">
                 <div className="login-header">
                     <img src={logoImg} alt="SysOrder" />
-                    <form className="login-form">
-                        <input placeholder="E-mail" type="email" required/>
+                    <form className="login-form" onSubmit={handleLogin}>
+                        <input placeholder="E-mail" 
+                        type="email" 
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        required/>
                         <div className="login-icons"><FiMail size={16}/></div>
-                        <input placeholder="Senha" type="password" required/>
+                        <input placeholder="Senha" 
+                        type="password"
+                        value={senha}
+                        onChange={e => setSenha(e.target.value)}
+                        required/>
                         <div className="login-icons"><FiLock size={16}/></div>
                         <button className="button">Entrar</button>
                     </form>

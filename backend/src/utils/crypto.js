@@ -11,7 +11,7 @@ function criptografar(text){
     return (encrypted + cipher.final(DATA.tipo));
 }
 
-async function descriptografar(text){
+function descriptografar(text){
     const decipher = crypto.createDecipher(DATA.algoritmo,DATA.segredo);
     decipher.setAutoPadding(false);
     const decrypted = decipher.update(text, DATA.tipo, 'utf8');
