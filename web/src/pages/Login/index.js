@@ -13,6 +13,12 @@ export default function Login(){
 
     const history = useHistory();
 
+    const session = localStorage.getItem('userMail');
+
+    if(session){
+        history.push("/home");
+    }
+
     const [showRec, setShowRec] = useState(false);
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
